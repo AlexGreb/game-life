@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Игра "Жизнь"</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+    <h1>Игра "Жизнь"</h1>
+</header>
+
+<main>
+    <section class="game-container">
+        <h2 class="time">Время: <span>0</span></h2>
+        <canvas id="gameCanvas" width="400" height="400"></canvas>
+    </section>
+
+    <section class="controls">
+        <div class="control-panel">
+            <h2>Настройки игры</h2>
+
+            <label for="generationTime">Время генерации (мс):</label>
+            <input type="number" id="generationTime" min="0" max="2000" step="100" value="0">
+
+            <label for="gridSize">Размер поля (клеток):</label>
+            <input type="range" id="gridSize" min="8" max="1000" value="32" oninput="gridSizeValue.value = gridSize.value">
+            <output id="gridSizeValue">32</output>
+
+            <label for="fieldColor">Фон поля:</label>
+            <input type="color" id="fieldColor" value="#ffffff">
+
+            <label for="cellColor">Цвет клеток:</label>
+            <input type="color" id="cellColor" value="#000000">
+
+            <div class="buttons">
+                <button type="button" id="generateBtn">Сгенерировать</button>
+                <button type="button" id="startBtn">Старт</button>
+                <button type="button" id="stopBtn">Остановить</button>
+                <button type="button" id="resetBtn">Сбросить</button>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <p>&copy; 2024 Игра "Жизнь"</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
