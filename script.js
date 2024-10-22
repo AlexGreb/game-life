@@ -4,11 +4,12 @@ window.addEventListener('load', () => {
     if(!canvas) return
     const ctx = canvas.getContext('2d');
     const canvasWithAttr = canvas.getAttribute('width');
-    const canvasWidth = parseInt(canvasWithAttr);
     const canvasHeightAttr = canvas.getAttribute('height');
+    const canvasWidth = parseInt(canvasWithAttr);
     const canvasHeight = parseInt(canvasHeightAttr);
 
     //controls
+
     const generationTimeInput = document.getElementById('generationTime');
     const gridSizeInput = document.getElementById('gridSize');
     const cellColorInput = document.getElementById('cellColor');
@@ -24,14 +25,13 @@ window.addEventListener('load', () => {
     let gridSize = parseInt(gridSizeInput?.value || 500);
     let cellColor = cellColorInput.value;
     let fieldColor = fieldColorInput.value;
-    const sizeCanvas = Number(canvas.getAttribute('width'));
-    let cellSize = sizeCanvas / gridSize;
+    const sizeCanvas = parseInt(canvas.getAttribute('width'));
+    let cellSize = Math.ceil(sizeCanvas / gridSize);
     let gridData = getGridData();
     const timer = new Timer();
     let time = 0;
 
     let startGame = false;
-    let pauseGame = false;
 
 
     //listeners
@@ -57,8 +57,10 @@ window.addEventListener('load', () => {
         const target = e.target;
         speed = parseInt(target.value || target.min) ;
         target.value = speed;
-        timer.clearTimer();
-        timer.start(tick, gridData, speed);
+        if(startGame) {
+            timer.clearTimer();
+            timer.start(tick, gridData, speed);
+        }
     })
 
     startBtn.addEventListener('click', () => {
@@ -71,7 +73,7 @@ window.addEventListener('load', () => {
     gridSizeInput.addEventListener('change', (e) => {
         if(startGame) return
         gridSize = parseInt(e.target.value);
-        cellSize = sizeCanvas / gridSize;
+        cellSize = Math.ceil(sizeCanvas / gridSize);
     })
 
     cellColorInput.addEventListener('change', (e) => {
@@ -109,15 +111,19 @@ window.addEventListener('load', () => {
         ctx.clearRect(0, 0, canvasWidth, canvasHeight);
     }
 
+    function drawCell(x, y, state) {
+        // Очищаем область клетки
+        ctx.clearRect(x * cellSize, y * cellSize, cellSize, cellSize);
+
+        // Рисуем клетку с новым состоянием
+        ctx.fillStyle = state ? cellColor : fieldColor;
+        ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+    }
+
     function drawGrid(gridData) {
-        for(let row = 0; row < gridSize; row++) {
-            for(let col = 0; col < gridSize; col++) {
-                const x = col * cellSize;
-                const y = row * cellSize;
-                ctx.fillStyle = gridData[row][col] > 0 ? cellColor : fieldColor;
-                ctx.fillRect(x, y, cellSize, cellSize);
-            }
-        }
+        gridData.forEach((row, y) =>
+            row.forEach((cell, x) => drawCell(x, y, cell))
+        );
     }
 
 
@@ -151,19 +157,21 @@ window.addEventListener('load', () => {
 
     function tick(gridData) {
         const neighbors = getNeighbors(gridData);
-        for(let i = 0; i < gridData.length; i++) {
-            for(let j = 0; j < gridData[i].length; j++) {
-                const cell = gridData[i][j];
-                const countAlive = neighbors[i][j];
-                if(!cell) {
-                    gridData[i][j] = countAlive === 3 ? 1 : 0;
-                } else {
-                    gridData[i][j] = countAlive === 3 || countAlive === 2 ? 1 : 0;
+
+        gridData.forEach((row, y) => {
+            row.forEach((cell, x) => {
+                const countAlive = neighbors[y][x];
+                // Определяем новое состояние клетки
+                const newState = cell ? countAlive === 2 || countAlive === 3 : countAlive === 3;
+
+                // Перерисовываем клетку только если её состояние изменилось
+                if (cell !== newState) {
+                    gridData[y][x] = newState;
+                    drawCell(x, y, newState); // Перерисовка изменённой клетки
                 }
-            }
-        }
-        clearCanvas();
-        drawGrid(gridData);
+            });
+        });
+
         time++;
         setTime(time);
     }
