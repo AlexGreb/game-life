@@ -101,7 +101,7 @@ window.addEventListener('load', () => {
         for(let i = 0; i < sizeGrid; i++) {
             const row = new Array(sizeGrid).fill(0);
             for(let j = 0; j < sizeGrid; j++) {
-                row[j] = isRandom ? Math.round(Math.random()) : 0;
+                row[j] = isRandom ? Math.random() < 0.5 ? 1 : 0 : 0;
             }
             data[i] = row;
         }
