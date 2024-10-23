@@ -5,10 +5,8 @@ window.addEventListener('load', () => {
     const canvas = document.getElementById('gameCanvas');
     if(!canvas) return
     const ctx = canvas.getContext('2d');
-    const canvasWithAttr = canvas.getAttribute('width');
-    const canvasHeightAttr = canvas.getAttribute('height');
-    const canvasWidth = parseInt(canvasWithAttr);
-    const canvasHeight = parseInt(canvasHeightAttr);
+    const canvasWidth = 400;
+    const canvasHeight = 400;
 
     //settings controls
     const speedControl = document.getElementById('generationTime');
@@ -28,9 +26,9 @@ window.addEventListener('load', () => {
     let sizeGrid = parseInt(sizeGridControl?.value || 500);
     let colorCells = colorCellControl.value;
     let bgColor = bgColorControl.value;
-    const sizeCanvas = parseInt(canvas.getAttribute('width'));
-    let sizeCell = Math.ceil(sizeCanvas / sizeGrid);
-    let gridData = getGridData();
+
+    let sizeCell = Math.ceil(canvasWidth / sizeGrid);
+    let gridData = getGridData(sizeGrid);
 
     // вынести в функцию?
     const timer = new Timer();
@@ -42,7 +40,7 @@ window.addEventListener('load', () => {
         if(startGame) return
         startGame = true;
         disableBtns();
-        gridData = getGridData(true);
+        gridData = getGridData(sizeGrid, true);
         drawGrid(gridData);
         timer.start(tick, gridData, speed);
     })
@@ -50,9 +48,9 @@ window.addEventListener('load', () => {
     canvas.addEventListener('click', (e) => {
         if(startGame) return
         const rect = e.target.getBoundingClientRect();
-        const x = Math.ceil((e.clientX - rect.left) / sizeCell) - 1;
-        const y = Math.ceil((e.clientY - rect.top) / sizeCell) - 1;
-        gridData[y][x] = gridData[y][x] ? 0 : 1;
+        const y = Math.ceil((e.clientX - rect.x) / sizeCell) - 1;
+        const x = Math.ceil((e.clientY - rect.y) / sizeCell) - 1;
+        gridData[x][y] = gridData[x][y] ? 0 : 1;
         drawGrid(gridData);
     })
 
@@ -76,7 +74,7 @@ window.addEventListener('load', () => {
     sizeGridControl.addEventListener('change', (e) => {
         if(startGame) return
         sizeGrid = parseInt(e.target.value);
-        sizeCell = Math.ceil(sizeCanvas / sizeGrid);
+        sizeCell = Math.ceil(canvasWidth / sizeGrid);
     })
 
     colorCellControl.addEventListener('change', (e) => {
@@ -98,14 +96,14 @@ window.addEventListener('load', () => {
 
     //methods
 
-    function getGridData(isRandom = false) {
-        const data = [];
+    function getGridData(sizeGrid, isRandom = false, ) {
+        const data = new Array(sizeGrid).fill(0);
         for(let i = 0; i < sizeGrid; i++) {
-            const row = [];
+            const row = new Array(sizeGrid).fill(0);
             for(let j = 0; j < sizeGrid; j++) {
                 row[j] = isRandom ? Math.round(Math.random()) : 0;
             }
-            data.push(row);
+            data[i] = row;
         }
         return data;
     }
@@ -180,7 +178,7 @@ window.addEventListener('load', () => {
         clearCanvas();
         time = 0;
         setTime(time);
-        gridData = getGridData();
+        gridData = getGridData(sizeGrid);
         drawGrid(gridData);
         enableBtns()
     }
