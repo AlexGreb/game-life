@@ -11,7 +11,7 @@ class GameControls {
         this.resetBtn = document.getElementById('resetBtn');
         this.gridData = getGridData(this.settings.sizeGrid);
         this.initListeners();
-
+        
     }
 
     initListeners = () => {
@@ -22,28 +22,28 @@ class GameControls {
             this.game.start(gridData);
             this.disableControlsAfterStart();
         });
-
+        
 
         this.startBtn.addEventListener('click', () => {
             if(this.game.stateGame) return
             this.game.start(this.gridData);
             this.disableControlsAfterStart();
         });
-
+        
         this.updateGridData = (gridData) => {
             this.gridData = gridData;
         }
-
-        this.resetBtn.addEventListener('click', (e) => {
-            this.enableControlsAfterStop()
-            this.onReset(e);
+        
+        this.resetBtn.addEventListener('click', () => {
+            this.drawer.clearCanvas();
         });
 
         this.stopBtn.addEventListener('click', () => {
-            this.game.stop();
+            // timer.clearTimer();
+            // startGame = false;
         })
     }
-
+    
     disableControlsAfterStart = () => {
         this.generateCellsBtn.disabled = true;
     }
@@ -51,8 +51,6 @@ class GameControls {
     enableControlsAfterStop = () => {
         this.generateCellsBtn.disabled = false;
     }
-
-    onReset = () => {}
 }
 
 export {GameControls}

@@ -1,30 +1,23 @@
 class Drawer {
     constructor(sizeGrid, colorCells, bgColor) {
         const canvas = document.getElementById('gameCanvas');
-        canvas.addEventListener('click', (e) => this.onClick(e));
+        canvas.addEventListener('click', (e) => this.handleClick(e))
         this.ctx = canvas.getContext('2d');
-        this.ctx.fillStyle = "#fff";
-        this.ctx.fillRect(0, 0, canvas.width, canvas.height);
         this.width = canvas.width;
         this.height = canvas.height;
         this.sizeCell = Math.ceil(this.width / sizeGrid);
-        this.colorCells = '#000';
-        this.bgColor = '#fff';
-        this.countGenerationContainer = document.querySelector('.time >  span');
+        this.colorCells = colorCells;
+        this.bgColor = bgColor;
     }
 
-
+    
     // переопределяется в script.js
-    onClick = (e) => {}
-
+    handleClick = (e) => {}
+    
     drawGrid = (gridData) => {
         gridData.forEach((row, y) =>
             row.forEach((cell, x) => this.drawCell(x, y, cell))
         );
-    }
-
-    setGenerationCount = (count) => {
-        this.countGenerationContainer.textContent = `${count}`;
     }
 
     drawCell = (x, y, cell) => {
@@ -35,8 +28,6 @@ class Drawer {
 
     clearCanvas = () => {
         this.ctx.clearRect(0, 0, this.width, this.height);
-        this.ctx.fillStyle = "#fff";
-        this.ctx.fillRect(0, 0, this.width, this.height);
     }
 }
 
