@@ -34,6 +34,7 @@ window.addEventListener('load', () => {
     };
 
     gameControls.onReset = () => {
+        gameControls.gridData = getGridData(settings.sizeGrid);
         game.reset();
     }
 });
