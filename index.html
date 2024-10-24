@@ -14,7 +14,7 @@
 <main>
     <section class="game-container">
         <h2 class="time">Цикл: <span>0</span></h2>
-        <canvas id="gameCanvas" width="400" height="400"></canvas>
+        <canvas id="gameCanvas" width="500" height="500"></canvas>
     </section>
 
     <section class="controls">
@@ -27,12 +27,6 @@
             <label for="sizeGrid">Размер поля (клеток):</label>
             <input type="range" id="sizeGrid" min="20" max="1000" value="8" oninput="sizeGridValue.value = sizeGrid.value">
             <output id="sizeGridValue">100</output>
-
-            <label for="bgColor">Фон поля:</label>
-            <input type="color" id="bgColor" value="#ffffff">
-
-            <label for="cellColor">Цвет клеток:</label>
-            <input type="color" id="cellColor" value="#000000">
 
             <div class="buttons">
                 <button type="button" id="generateBtn">Сгенерировать</button>
